@@ -72,6 +72,11 @@ image_morphology = bwmorph(image_canny ,'thin', Inf);
 % Canny outputs a logical matrix, this converts it back to double precision
 image_morphology = im2double(image_morphology);
 
+% The Hough Circles code will give a warning for the selected Radius range
+% of 1 to 5, stating that the algorithm will be less accurate, it is
+% irrelevant, so it gets disabled
+warning('off')
+
 % The following code uses Hough Circles to remove little circles created by
 % canny resulting in less noise in the final image
 [centers, radii, ~] = imfindcircles(image_morphology,[1 5]);
@@ -81,11 +86,6 @@ image_circles_filtered = insertShape(image_morphology,'FilledCircle', ...
 % the result from insertShape will be b&w because of the original image
 % however outputted as 3 channels, we convert with rgb2gray
 image_circles_filtered = rgb2gray(image_circles_filtered);
-
-% The Hough Circles code will give a warning for the selected Radius range
-% of 1 to 10, stating that the algorithm will be less accurate, it is
-% irrelevant, so it gets disabled
-warning('off')
 
 % set output of function to the image containing the detected edges
 seg = image_circles_filtered;
